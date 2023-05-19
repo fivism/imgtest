@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface Props {
   library: string;
@@ -7,7 +8,7 @@ interface Props {
 
 const UploadAndDisplayImage = ({ library, operation }: Props) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [modifiedImage, setModifiedImage] = useState<File | null>(null); // is it a file
+  const [modifiedImage, setModifiedImage] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
   const handleSubmit = (event: any) => {
@@ -34,9 +35,9 @@ const UploadAndDisplayImage = ({ library, operation }: Props) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ image: base64Image, operation }), // include operation as param also
+      body: JSON.stringify({ image: base64Image }), // include operation as param also
     })
-      .then((response) => response.json())
+      .then((response) => response.text())
       .then((data) => {
         setModifiedImage(data);
       })
@@ -50,13 +51,12 @@ const UploadAndDisplayImage = ({ library, operation }: Props) => {
     <div>
       {selectedImage && (
         <div>
-          <img
+          <Image
             alt="not found"
-            width={"250px"}
+            width={400}
+            height={400}
             src={URL.createObjectURL(selectedImage)}
           />
-          <br />
-          <button onClick={() => setSelectedImage(null)}>Remove</button>
         </div>
       )}
 
@@ -80,9 +80,23 @@ const UploadAndDisplayImage = ({ library, operation }: Props) => {
           Submit
         </button>
       </form>
+
       <br />
+
       {errorMsg && (
         <span className="error-msg">Failed to upload ({errorMsg})</span>
+      )}
+
+      {modifiedImage && (
+        <div>
+          <Image
+            alt="not found"
+            width={400}
+            height={400}
+            src={`${modifiedImage}`}
+          />
+          <br />
+        </div>
       )}
     </div>
   );
