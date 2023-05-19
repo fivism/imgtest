@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
 interface Props {
+  library: string;
   operation: string;
 }
 
-const UploadAndDisplayImage = ({ operation }: Props) => {
+const UploadAndDisplayImage = ({ library, operation }: Props) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [modifiedImage, setModifiedImage] = useState<File | null>(null); // is it a file
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -22,8 +23,13 @@ const UploadAndDisplayImage = ({ operation }: Props) => {
     }
   };
 
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://api-dot-imgtest-387100.ew.r.appspot.com"
+      : "http://localhost:8080";
+
   const sendImage = (base64Image: string) => {
-    fetch("http://localhost:8000/jimp", {
+    fetch(`${baseUrl}/${library}/${operation}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,7 +81,9 @@ const UploadAndDisplayImage = ({ operation }: Props) => {
         </button>
       </form>
       <br />
-      {errorMsg && <span className="error-msg">Failed to upload ({errorMsg})</span>}
+      {errorMsg && (
+        <span className="error-msg">Failed to upload ({errorMsg})</span>
+      )}
     </div>
   );
 };

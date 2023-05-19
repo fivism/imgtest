@@ -19,7 +19,7 @@ function Jimp() {
         <option value="fastblur" disabled>Fast Blur</option>
         <option value="option3" disabled>Resize (longest side 500px)</option>
       </select>
-      <UploadAndDisplayImage operation="gaussian"/> {/* make interactive */}
+      <UploadAndDisplayImage library="jimp" operation="gaussian"/>
     </>
   );
 }
