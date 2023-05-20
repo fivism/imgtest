@@ -20,4 +20,21 @@ describe("behavior on /jimp", () => {
       expect(response.text).toBe(STOPLIGHT_BLURRED);
     });
   });
+  describe("fail validation with a wrong format", () => {
+    test("should respond with a 200 status code and a message", async () => {
+      const response = await request(app).post("/jimp/gaussian").send({
+        image: 123,
+      });
+      expect(response.statusCode).toBe(400);
+    });
+  });
+  describe("fail validation with extraneous keys", () => {
+    test("should respond with a 200 status code and a message", async () => {
+      const response = await request(app).post("/jimp/gaussian").send({
+        image: STOPLIGHT,
+        extraDetail: 'secret',
+      });
+      expect(response.statusCode).toBe(400);
+    });
+  });
 });
